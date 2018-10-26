@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         }
         if (pathElements[1] == 'product') {
           final int index = int.parse(pathElements[2]);
-          return MaterialPageRoute(
+          return MaterialPageRoute<bool>(
             builder: (BuildContext context) => ProductPage(
               _products[index]['title'],
               _products[index]['imageUrl'],
@@ -63,6 +63,11 @@ class _MyAppState extends State<MyApp> {
           );
         }
         return null;
+      },
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+          builder: (BuildContext context) => ProductsPage(_products, _addProduct, _deleteProduct),
+        );
       },
     );
   }
