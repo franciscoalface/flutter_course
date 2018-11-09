@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped-models/main.dart';
+
 class AuthPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -9,7 +13,7 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final Map<String, dynamic> _formData = {
-    'email':  null,
+    'email': null,
     'password': null,
     'acceptTerms': false
   };
@@ -40,7 +44,7 @@ class _AuthPageState extends State<AuthPage> {
         }
       },
       onSaved: (String value) {
-          _formData['email'] = value;
+        _formData['email'] = value;
       },
     );
   }
@@ -59,7 +63,7 @@ class _AuthPageState extends State<AuthPage> {
         }
       },
       onSaved: (String value) {
-          _formData['password'] = value;
+        _formData['password'] = value;
       },
     );
   }
@@ -76,13 +80,13 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm(Function login) {
     if (!_formKey.currentState.validate() || !_formData['acceptTerms']) {
       return;
     }
 
     _formKey.currentState.save();
-    print(_formData);
+    login(_formData['email'], _formData['password']);
     Navigator.pushReplacementNamed(context, '/products');
   }
 
@@ -113,10 +117,14 @@ class _AuthPageState extends State<AuthPage> {
                     _buildPasswordTextField(),
                     _buildAcceptSwith(),
                     SizedBox(height: 10.0),
-                    RaisedButton(
-                      textColor: Colors.white,
-                      child: Text('LOGIN'),
-                      onPressed: _submitForm,
+                    ScopedModelDescendant(
+                      builder: (BuildContext context, Widget child, MainModel model) {
+                        return RaisedButton(
+                          textColor: Colors.white,
+                          child: Text('LOGIN'),
+                          onPressed: () => _submitForm(model.login),
+                        );
+                      },
                     ),
                   ],
                 ),
