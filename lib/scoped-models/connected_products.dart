@@ -18,7 +18,6 @@ mixin ConnectedProductsModel on Model {
         userEmail: _authenticatedUser.email,
         userId: _authenticatedUser.id);
     _products.add(newProduct);
-    _selProductIndex = null;
     notifyListeners();
   }
 }
@@ -63,13 +62,11 @@ mixin ProductsModel on ConnectedProductsModel {
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId);
     _products[selectedProductIndex] = updatedProduct;
-    _selProductIndex = null;
     notifyListeners();
   }
 
   void deleteProduct() {
     _products.removeAt(selectedProductIndex);
-    _selProductIndex = null;
     notifyListeners();
   }
 
@@ -85,12 +82,13 @@ mixin ProductsModel on ConnectedProductsModel {
     );
     _products[selectedProductIndex] = updatedProduct;
     notifyListeners();
-    _selProductIndex = null;
   }
 
   void selectProduct(int index) {
     _selProductIndex = index;
-    notifyListeners();
+    if (index != null) {
+      notifyListeners();
+    }
   }
 
   void toggleDisplayMode() {
@@ -101,6 +99,7 @@ mixin ProductsModel on ConnectedProductsModel {
 
 mixin UserModel on ConnectedProductsModel {
   void login(String email, String password) {
-    _authenticatedUser = User(id: 'asodfiajsasd', email: email, password: password);
+    _authenticatedUser =
+        User(id: 'asodfiajsasd', email: email, password: password);
   }
 }
